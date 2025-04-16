@@ -1,33 +1,39 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Toy dataset
+# Toy dataset avec une variable utile (Glucose) et une inutile (aléatoire)
 data = {
     'Personne': [1, 2, 3, 4],
-    'Taux de glucose': [80, 140, 90, 160],
+    'Taux de glucose': [80, 140, 90, 160],  
+    'Score aléatoire': [12, 45, 13, 42],  
     'Diabète': [0, 1, 0, 1]
 }
 
 df = pd.DataFrame(data)
 
-# Calcul manuel de la moyenne
-glucoses = df['Taux de glucose']
-moyenne = sum(glucoses) / len(glucoses)
+# Moyennes
+moy_glucose = sum(df['Taux de glucose']) / len(df)
+moy_aleatoire = sum(df['Score aléatoire']) / len(df)
 
-# Calcul manuel de la variance (échantillon)
-somme_ecarts_carrés = sum((x - moyenne) ** 2 for x in glucoses)
-variance = somme_ecarts_carrés / (len(glucoses) - 1)
+# Variances
+var_glucose = sum((x - moy_glucose) ** 2 for x in df['Taux de glucose']) / (len(df) - 1)
+var_aleatoire = sum((x - moy_aleatoire) ** 2 for x in df['Score aléatoire']) / (len(df) - 1)
 
-print("Moyenne du taux de glucose :", moyenne)
-print("Variance du taux de glucose :", variance)
+print("Variance - Taux de glucose :", var_glucose)
+print("Variance - Score aléatoire :", var_aleatoire)
 
 # Visualisation
-plt.figure(figsize=(6, 4))
-plt.bar(df['Personne'], df['Taux de glucose'], color='lightcoral')
-plt.axhline(y=moyenne, color='blue', linestyle='--', label='Moyenne')
-plt.title("Taux de glucose (Toy Dataset)")
+plt.figure(figsize=(8, 5))
+bar_width = 0.35
+index = range(len(df))
+
+plt.bar([i - 0.2 for i in index], df['Taux de glucose'], width=bar_width, label='Taux de glucose', color='salmon')
+plt.bar([i + 0.2 for i in index], df['Score aléatoire'], width=bar_width, label='Score aléatoire', color='lightblue')
+
+plt.title("Comparaison : Variable utile vs. inutile")
 plt.xlabel("Personne")
-plt.ylabel("Taux de glucose (mg/dL)")
+plt.ylabel("Valeur")
+plt.xticks(index, df['Personne'])
 plt.legend()
 plt.grid(True)
 plt.tight_layout()

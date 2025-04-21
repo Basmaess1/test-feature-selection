@@ -1,40 +1,45 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Toy dataset avec une variable utile (Glucose) et une inutile (aléatoire)
-data = {
-    'Personne': [1, 2, 3, 4],
-    'Taux de glucose': [80, 140, 90, 160],  
-    'Score aléatoire': [12, 45, 13, 42],  
-    'Diabète': [0, 1, 0, 1]
-}
+# Importer les données depuis un fichier CSV
+df = pd.read_csv('diabetes.csv')
 
-df = pd.DataFrame(data)
+# Affichage des premières lignes pour vérification
+# print(df.head())
 
-# Moyennes
-moy_glucose = sum(df['Taux de glucose']) / len(df)
-moy_aleatoire = sum(df['Score aléatoire']) / len(df)
+# Sélection des colonnes 'Glucose' et 'BMI'
+glucoses = df['Glucose']
+bmi = df['BMI']
 
-# Variances
-var_glucose = sum((x - moy_glucose) ** 2 for x in df['Taux de glucose']) / (len(df) - 1)
-var_aleatoire = sum((x - moy_aleatoire) ** 2 for x in df['Score aléatoire']) / (len(df) - 1)
+# Calcul manuel de la moyenne pour 'Glucose'
+moyenne_glucose = sum(glucoses) / len(glucoses)
 
-print("Variance - Taux de glucose :", var_glucose)
-print("Variance - Score aléatoire :", var_aleatoire)
+# Calcul manuel de la variance pour 'Glucose'
+somme_ecarts_carrés_glucose = sum((x - moyenne_glucose) ** 2 for x in glucoses)
+variance_glucose = somme_ecarts_carrés_glucose / (len(glucoses) - 1)
+
+# Calcul manuel de la moyenne pour 'BMI'
+moyenne_bmi = sum(bmi) / len(bmi)
+
+# Calcul manuel de la variance pour 'BMI'
+somme_ecarts_carrés_bmi = sum((x - moyenne_bmi) ** 2 for x in bmi)
+variance_bmi = somme_ecarts_carrés_bmi / (len(bmi) - 1)
+
+# Affichage des résultats
+print("Moyenne du glucose :", moyenne_glucose)
+print("Variance du glucose :", variance_glucose)
+
+print("Moyenne du BMI :", moyenne_bmi)
+print("Variance du BMI :", variance_bmi)
 
 # Visualisation
-plt.figure(figsize=(8, 5))
-bar_width = 0.35
-index = range(len(df))
-
-plt.bar([i - 0.2 for i in index], df['Taux de glucose'], width=bar_width, label='Taux de glucose', color='salmon')
-plt.bar([i + 0.2 for i in index], df['Score aléatoire'], width=bar_width, label='Score aléatoire', color='lightblue')
-
-plt.title("Comparaison : Variable utile vs. inutile")
+plt.figure(figsize=(12, 6))
+plt.bar(df.index, df['Glucose'], width=0.4, label='Glucose', color='purple', align='center')
+plt.bar(df.index, df['BMI'], width=0.4, label='BMI', color='orange', align='edge')
+plt.title("Taux de Glucose et BMI")
 plt.xlabel("Personne")
 plt.ylabel("Valeur")
-plt.xticks(index, df['Personne'])
 plt.legend()
-plt.grid(True)
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
